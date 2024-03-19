@@ -1,24 +1,12 @@
 package com.hcl.tool
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.hcl.Config
-import com.hcl.ui.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.jsonObject
-import okhttp3.*
-import okhttp3.Request
-import okhttp3.Response
 import okhttp3.internal.closeQuietly
-import okio.*
 import java.io.Closeable
 import java.io.File
-import java.io.IOException
 import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
@@ -209,12 +197,7 @@ object Tool {
                 file.deleteIfExist()
                 file.writeText(formatContent)
                 file.deleteOnExit()
-                Runtime.getRuntime().exec(
-                    arrayOf(
-                        "C:\\Users\\HCl\\AppData\\Local\\Programs\\Microsoft VS Code\\bin\\code.cmd",
-                        file.absolutePath
-                    )
-                )
+                Runtime.getRuntime().exec(arrayOf(Config.vscodePath, file.absolutePath))
             }
 
         }.flowOn(Dispatchers.Default)

@@ -27,7 +27,7 @@ fun main() = application {
 
     Window(onCloseRequest = ::exitApplication,
         state = WindowState(size = DpSize(1100.dp, 640.dp)),
-        title = "ComposeDemo",
+        title = "SimpleTool",
         onKeyEvent = {
             if (it.isCtrlPressed && (it.key == Key.C || it.key == Key.V)) {
                 key = it

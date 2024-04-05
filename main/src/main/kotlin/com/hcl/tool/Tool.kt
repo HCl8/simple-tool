@@ -126,12 +126,7 @@ object Tool {
         }
 
         subCommand("Install") {
-            flow {
-                val apkFile = it.file.toFile()
-                emit("try install ${apkFile.name}")
-                emit("modify time " + dateFotmat.format(apkFile.lastModified()))
-                "adb install -d \"${it.file}\"".exec().emitAll(this)
-            }.flowOn(Dispatchers.IO)
+            installLastModifyApk(it.file)
         }
 
         subCommand("InstallBuild") {
@@ -249,26 +244,29 @@ object Tool {
 }
 
 fun installLastModifyApk(path: String) = flow {
+    var parent = path.toFile()
     val file = if (path.endsWith(".apk")) {
-        path.toFile()
+        parent
     } else {
-        val f = path.toFile().listFiles()?.toList()
+        val f = parent.listFiles()?.toList()
             ?.filter { it.name.endsWith("apk") || it.name.endsWith(".zip") }
             ?.sortedByDescending { it.lastModified() }
             ?.first {
                 it.name.endsWith("apk") || ZipFile(it).use { it.entries().toList().any { it.name.endsWith(".apk") } }
-            }
+            } ?: if (parent.exists()) parent.also { parent = it.parentFile } else null
 
         if (f?.name?.endsWith(".zip") == true) {
             ZipFile(f).use {
-                val entry = it.entries().toList().firstOrNull { it.name.endsWith(".apk") }
+                val entryList = it.entries().toList()
+                val entry = entryList.firstOrNull { it.name.endsWith(".apk") }
+
                 if (entry == null) {
                     emit("can't find apk in zip file!")
                     return@use null
                 } else {
                     emit("try install ${f.name} of ${entry.name}!")
                     val extraName = entry.name.substringAfterLast("/")
-                    val apkFile = File(path.toFile(), extraName)
+                    val apkFile = File(parent, extraName)
                     emit("apk name $extraName oringin modify time ${Tool.dateFotmat.format(Date(entry.time))}")
                     it.getInputStream(entry).use { inputStream ->
                         val outputStream = apkFile.outputStream()
@@ -292,4 +290,3 @@ fun installLastModifyApk(path: String) = flow {
     }
     emit("return value ${exec.exit}")
 }.flowOn(Dispatchers.IO)
-

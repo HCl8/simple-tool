@@ -239,6 +239,12 @@ object Tool {
                 println("link log finish!")
             }.flowOn(Dispatchers.IO)
         }
+        subCommand("apkInfo") {
+            flow<String> {
+                val version = ApkTool.getApkVersion(it.file)
+                emit("versionName: $version")
+            }.flowOn(Dispatchers.IO)
+        }
     }
 }
 

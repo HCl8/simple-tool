@@ -1,7 +1,6 @@
 package com.hcl.tool
 
 import com.hcl.tool.Command.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
@@ -149,14 +148,3 @@ inline fun createCommand(crossinline action: ResultBuilder.(Request) -> Flow<Str
     builder.mainAction(action)
     return builder
 }
-
-fun String.toFlow(): Flow<String> = flowOf(this)
-
-fun InputStream.asFlow(): Flow<String> = flow {
-    val reader = this@asFlow.bufferedReader()
-    var line: String?
-    while (true) {
-        line = reader.readLine() ?: break
-        emit(line + "\n")
-    }
-}.flowOn(Dispatchers.IO)

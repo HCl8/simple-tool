@@ -58,6 +58,7 @@ class ResultBuilder {
                     { null },
                     { flowOf(it.message ?: "exception") }
                 )
+                ?.catch { emit("exception $it") }
         })
         refreshSubCommand()
     }
@@ -69,6 +70,7 @@ class ResultBuilder {
                     { it },
                     { flowOf(it.message ?: "exception") }
                 )
+                .catch { emit("exception $it") }
         })
         refreshSubCommand()
     }
@@ -90,6 +92,7 @@ class ResultBuilder {
                     { it },
                     { flowOf(it.message ?: "exception") }
                 )
+                .catch { emit("exception $it") }
                 .also { isRunning = true }
         }
     }
@@ -101,6 +104,7 @@ class ResultBuilder {
                     { null },
                     { flowOf(it.message ?: "exception") }
                 )
+                ?.catch { emit("exception $it") }
                 .also { isRunning = true }
         }
     }

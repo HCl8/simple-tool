@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.hcl.Config
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import okhttp3.internal.closeQuietly
 import java.io.Closeable
 import java.io.File
 import java.io.InputStream
@@ -13,9 +12,6 @@ import java.util.*
 import java.util.zip.GZIPInputStream
 import java.util.zip.ZipFile
 import java.util.zip.ZipInputStream
-import kotlin.coroutines.EmptyCoroutineContext
-import kotlin.io.use
-
 
 object Tool {
 
@@ -67,7 +63,7 @@ object Tool {
             .forEach {
                 emit("file: ${it.first} text line number: ${it.second}")
             }
-        zf.closeQuietly()
+        zf.close()
         emit("finish!")
         System.gc()
     }.flowOn(Dispatchers.IO)
@@ -173,12 +169,6 @@ object Tool {
                 Runtime.getRuntime().exec(arrayOf(Config.notepadPath, logFile.absolutePath))
             }
         }.flowOn(Dispatchers.IO)
-    }
-
-    inline fun async(crossinline action: () -> Unit) {
-        Dispatchers.IO.dispatch(EmptyCoroutineContext) {
-            action.invoke()
-        }
     }
 
     fun formatJson() = createCommand {

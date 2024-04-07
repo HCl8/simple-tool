@@ -13,7 +13,4 @@ object Config {
 
     const val notepadPath = "C:\\Program Files\\Notepad++\\notepad++.exe"
     const val vscodePath = "C:\\Users\\HCl\\AppData\\Local\\Programs\\Microsoft VS Code\\bin\\code.cmd"
-
-    const val ciToken = "_EepLvdzPHY3XKKW5heY"
-    const val ciRef = "hcl_pro"
 }

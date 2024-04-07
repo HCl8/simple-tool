@@ -48,7 +48,7 @@ fun toolList(
 //            .border(2.dp, color = Color(0xffEC7063),shape = RectangleShape)
             .padding(3.dp).verticalScroll(rememberScrollState())
     ) {
-        val showCommand = Command.values().toList().filter { !blackCommand.contains(it) }
+        val showCommand = Command.entries.filter { !blackCommand.contains(it) }
         for (value in showCommand) {
 
             val subCommandList = status[value]

@@ -104,12 +104,12 @@ fun String.exec(env: Array<String>? = null, dir: File? = null): ExecResult {
     val exec = Runtime.getRuntime().exec(this, env, dir)
     val out = mutableListOf<String>()
     val err = mutableListOf<String>()
-    Tool.async {
+    async {
         exec.inputStream.reader().forEachLine {
             out.add(it)
         }
     }
-    Tool.async {
+    async {
         exec.errorStream.reader().forEachLine {
             println("err: $it")
             err.add(it)
